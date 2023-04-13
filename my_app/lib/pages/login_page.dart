@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/swap_tokens.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:my_app/pages/current_price.dart';
@@ -62,7 +63,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: const Text("Connect with Metamask")),
             const SizedBox(height: 30),
             ElevatedButton(
-                onPressed: () => (context), child: const Text("Swap Tokens")),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SwapTokens()));
+                },
+                child: const Text("Swap Tokens")),
             const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
