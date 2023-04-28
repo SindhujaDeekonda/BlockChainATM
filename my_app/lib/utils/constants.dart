@@ -4,10 +4,13 @@ String infura_url =
 String owner_private_key =
     "210cdc8f160cb89274fd57b8d6e605f8baa03ead1f7a5191dd5005996c346dfe";
 
+String owner_public_address = "0x6fCCe8D60d3C3A58178E69e0caDa110bEE9f6363";
+String user_public_address = "0xB6C046343dF17e4B0296c59440abc9Fcb511c2fA";
+
 String user_private_key =
     "96a61f69640af9f7d6bda630c0a5aec6dc5c4686b76797e2c294aae1c78e796a";
 
 String currentPriceAddress = "0xa629704d23831C1dc811B5d48828BEBd15745385";
 
-String swapTokenAddress = "0xB3e6df414D46d84bC22011f12Be84Cb5Ad6374b5";
+String swapTokenAddress = "0xf886CaF5bEeDA8fDbD2a62e69C1A067540ADDAD8";
 //0x81a5531f291Ed1735C37d6334DfA3F5423F010d9 - contract address

@@ -14,8 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        //brightness: Brightness.dark,
-        primaryColor: Colors.deepPurple,
+        primarySwatch: Colors.deepPurple,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),

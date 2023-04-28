@@ -9,6 +9,8 @@ class LoginPage extends StatefulWidget {
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+
+  loginUsingMetamask(BuildContext context) {}
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -29,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       try {
         var session = await connector.createSession(onDisplayUri: (uri) async {
           _uri = uri;
+          print(uri);
           await launchUrlString(uri, mode: LaunchMode.externalApplication);
         });
         setState(() {
@@ -53,9 +56,9 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
+              height: 300.0,
               child:
                   Image.asset('assets/images/logo.jpg', fit: BoxFit.fitWidth),
-              height: 300.0,
             ),
             const SizedBox(height: 30),
             ElevatedButton(
