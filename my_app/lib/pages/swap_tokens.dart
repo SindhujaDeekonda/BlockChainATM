@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,7 +21,7 @@ class _SwapTokensState extends State<SwapTokens> {
   @override
   void initState() {
     httpClient = Client();
-    ethClient = Web3Client(infura_url, httpClient!);
+    ethClient = Web3Client(sepolia_infura_url, httpClient!);
     super.initState();
   }
 
@@ -30,6 +29,14 @@ class _SwapTokensState extends State<SwapTokens> {
     String abi = await rootBundle.loadString('assets/abi/st_abi.json');
     String contractAddress = swapTokenAddress;
     final contract = DeployedContract(ContractAbi.fromJson(abi, 'SwapTokens'),
+        EthereumAddress.fromHex(contractAddress));
+    return contract;
+  }
+
+  Future<DeployedContract> loadContract2() async {
+    String abi = await rootBundle.loadString('assets/abi/get_bal.json');
+    String contractAddress = getBalanceContractAddress;
+    final contract = DeployedContract(ContractAbi.fromJson(abi, 'TokenBalance'),
         EthereumAddress.fromHex(contractAddress));
     return contract;
   }
@@ -51,30 +58,39 @@ class _SwapTokensState extends State<SwapTokens> {
 
   Future<List<dynamic>> ask(
       String funcName, List<dynamic> args, Web3Client ethClient) async {
-    final contract = await loadContract1();
+    final contract = await loadContract2();
     final ethFunction = contract.function(funcName);
     final result = await ethClient.call(
-        contract: contract, function: ethFunction, params: args);
+        contract: contract, function: ethFunction, params: [args[0], args[1]]);
     return result;
   }
 
   late String acc1;
   late String acc2;
+  late String tok1;
+  late String tok2;
   late BigInt amount1;
   late BigInt amount2;
-  String bal1 = '';
+  String gldbal1 = "";
+  String slvbal1 = "";
+  String gldbal2 = "";
+  String slvbal2 = "";
+  bool isLoading1 = false;
+  bool isLoading2 = false;
 
-  Future<List<dynamic>> getBalance1(
-      String funcName, String addr, Web3Client ethClient) async {
-    List<dynamic> result =
-        await ask(funcName, [EthereumAddress.fromHex(addr)], ethClient);
+  Future<List<dynamic>> getBalance(
+      String tok, String acc, Web3Client ethClient) async {
+    List<dynamic> result = await ask(
+        'getTokenBalance',
+        [EthereumAddress.fromHex(tok), EthereumAddress.fromHex(acc)],
+        ethClient);
     return result;
   }
 
   void showSuccessMessage() {
     Fluttertoast.showToast(
         msg: "Swapped Tokens successfully!!",
-        toastLength: Toast.LENGTH_SHORT,
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.green,
@@ -82,18 +98,23 @@ class _SwapTokensState extends State<SwapTokens> {
         fontSize: 16.0);
   }
 
-  // Future<List<dynamic>> getBalance2(Web3Client ethClient) async {
-  //   List<dynamic> result = await ask(
-  //       'show_balance2',
-  //       [EthereumAddress.fromHex("0xB6C046343dF17e4B0296c59440abc9Fcb511c2fA")],
-  //       ethClient);
-  //   return result;
-  // }
+  void incompleteDetails() {
+    Fluttertoast.showToast(
+        msg: "Please enter valid addresses!!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
 
   TextEditingController mycontroller1 = TextEditingController();
   TextEditingController mycontroller2 = TextEditingController();
   TextEditingController mycontroller3 = TextEditingController();
   TextEditingController mycontroller4 = TextEditingController();
+  TextEditingController mycontroller5 = TextEditingController();
+  TextEditingController mycontroller6 = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,6 +148,7 @@ class _SwapTokensState extends State<SwapTokens> {
                   children: [
                     const SizedBox(
                       width: 100,
+                      height: 40,
                       child: CupertinoButton(
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -134,7 +156,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         disabledColor: Colors.deepOrange,
                         onPressed: null,
                         child: Text(
-                          "Account 1",
+                          "Owner 1",
                           style: TextStyle(
                             fontSize: 15.5,
                           ),
@@ -148,6 +170,7 @@ class _SwapTokensState extends State<SwapTokens> {
                       child: TextField(
                         controller: mycontroller1,
                         decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(11),
                           border: OutlineInputBorder(),
                           labelText: 'Enter Account 1 Address',
                         ),
@@ -162,6 +185,7 @@ class _SwapTokensState extends State<SwapTokens> {
                   children: [
                     const SizedBox(
                       width: 100,
+                      height: 40,
                       child: CupertinoButton(
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -169,7 +193,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         disabledColor: Colors.deepOrange,
                         onPressed: null,
                         child: Text(
-                          "Account 2",
+                          "Token 1",
                           style: TextStyle(
                             fontSize: 15.5,
                           ),
@@ -183,6 +207,44 @@ class _SwapTokensState extends State<SwapTokens> {
                       child: TextField(
                         controller: mycontroller2,
                         decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(11),
+                          border: OutlineInputBorder(),
+                          labelText: 'Enter Token 1 Address',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 100,
+                      height: 40,
+                      child: CupertinoButton(
+                        padding: EdgeInsets.all(0),
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        color: Colors.white,
+                        disabledColor: Colors.deepOrange,
+                        onPressed: null,
+                        child: Text(
+                          "Owner 2",
+                          style: TextStyle(
+                            fontSize: 15.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Flexible(
+                      child: TextField(
+                        controller: mycontroller3,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(11),
                           border: OutlineInputBorder(),
                           labelText: 'Enter Account 2 Address',
                         ),
@@ -197,6 +259,44 @@ class _SwapTokensState extends State<SwapTokens> {
                   children: [
                     const SizedBox(
                       width: 100,
+                      height: 40,
+                      child: CupertinoButton(
+                        padding: EdgeInsets.all(0),
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        color: Colors.white,
+                        disabledColor: Colors.deepOrange,
+                        onPressed: null,
+                        child: Text(
+                          "Token 2",
+                          style: TextStyle(
+                            fontSize: 15.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Flexible(
+                      child: TextField(
+                        controller: mycontroller4,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(11),
+                          border: OutlineInputBorder(),
+                          labelText: 'Enter Token 2 Address',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 100,
+                      height: 40,
                       child: CupertinoButton(
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -216,8 +316,9 @@ class _SwapTokensState extends State<SwapTokens> {
                     ),
                     Flexible(
                       child: TextField(
-                        controller: mycontroller3,
+                        controller: mycontroller5,
                         decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(11),
                           border: OutlineInputBorder(),
                           labelText: 'Enter no of GOLD tokens',
                         ),
@@ -232,6 +333,7 @@ class _SwapTokensState extends State<SwapTokens> {
                   children: [
                     const SizedBox(
                       width: 100,
+                      height: 40,
                       child: CupertinoButton(
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -251,8 +353,9 @@ class _SwapTokensState extends State<SwapTokens> {
                     ),
                     Flexible(
                       child: TextField(
-                        controller: mycontroller4,
+                        controller: mycontroller6,
                         decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(11),
                           border: OutlineInputBorder(),
                           labelText: 'Enter no of SILVER tokens',
                         ),
@@ -261,7 +364,7 @@ class _SwapTokensState extends State<SwapTokens> {
                   ],
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 35,
                 ),
                 ElevatedButton(
                   //style: Color,
@@ -274,25 +377,37 @@ class _SwapTokensState extends State<SwapTokens> {
                   ),
                   onPressed: () async {
                     acc1 = mycontroller1.text;
-                    acc2 = mycontroller2.text;
-                    amount1 = BigInt.parse(mycontroller3.text) *
+                    tok1 = mycontroller2.text;
+                    acc2 = mycontroller3.text;
+                    tok2 = mycontroller4.text;
+                    amount1 = BigInt.parse(mycontroller5.text) *
                         BigInt.from(pow(10, 18));
-                    amount2 = BigInt.parse(mycontroller4.text) *
+                    amount2 = BigInt.parse(mycontroller6.text) *
                         BigInt.from(pow(10, 18));
                     print(acc1);
                     print(acc2);
                     print(amount1);
                     print(amount2);
-                    callFunctionfromst('swap', [amount1, amount2], ethClient!,
+                    callFunctionfromst(
+                        'swap',
+                        [
+                          EthereumAddress.fromHex(tok1),
+                          EthereumAddress.fromHex(acc1),
+                          EthereumAddress.fromHex(tok2),
+                          EthereumAddress.fromHex(acc2),
+                          amount1,
+                          amount2
+                        ],
+                        ethClient!,
                         owner_private_key);
                     showSuccessMessage();
                   },
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 30,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Column(
                       children: [
@@ -300,29 +415,44 @@ class _SwapTokensState extends State<SwapTokens> {
                         SizedBox(
                           width: 160,
                           child: CupertinoButton(
+                            minSize: 0,
+                            pressedOpacity: 1.0,
                             padding: EdgeInsets.all(10),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25.0)),
                             color: Colors.deepOrange,
-
                             onPressed: () async {
-                              acc1 = mycontroller1.text;
-                              var res1 = await getBalance1(
-                                  "show_balance1", acc1, ethClient!);
-                              BigInt bigint = res1[0];
                               setState(() {
-                                bal1 = '$bigint';
+                                isLoading1 = true;
                               });
+                              await Future.delayed(const Duration(seconds: 1));
+                              if (mycontroller1.text.length == 0 ||
+                                  mycontroller2.text.length == 0 ||
+                                  mycontroller4.text.length == 0) {
+                                isLoading1 = false;
+                                incompleteDetails();
+                              }
+                              acc1 = mycontroller1.text;
+                              tok1 = mycontroller2.text;
+                              tok2 = mycontroller4.text;
+                              //DeployedContract contract1 = await loadContract1();
+                              //var _token1 = await contract1.functions.token1.call();
+                              var res1 =
+                                  await getBalance(tok1, acc1, ethClient!);
+                              BigInt bigint1 = BigInt.from(
+                                  res1[0] / BigInt.from(pow(10, 18)));
+                              var res2 =
+                                  await getBalance(tok2, acc1, ethClient!);
+                              BigInt bigint2 = BigInt.from(
+                                  res2[0] / BigInt.from(pow(10, 18)));
+                              setState(() {
+                                gldbal1 = '$bigint1';
+                                slvbal2 = '$bigint2';
+                                isLoading1 = false;
+                              });
+                              print(gldbal1);
+                              print(slvbal2);
                             },
-                            // async {
-                            //   acc1 = mycontroller1.text,
-                            //   print(acc1),
-                            //   var _bal1 = await getBalance1("show_balance1", acc1, ethClient!),
-                            //   BigInt bigint = _bal1[0];
-                            //   setState((){
-                            //     bal1 = '$_bal1';
-                            //   })
-                            // },
                             child: const Text(
                               "Account 1 balance",
                               textAlign: TextAlign.center,
@@ -333,9 +463,30 @@ class _SwapTokensState extends State<SwapTokens> {
                           ),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 25,
                         ),
-                        Text(bal1),
+                        Center(
+                            child: !isLoading1
+                                ? Column(
+                                    children: [
+                                      Text(
+                                        'GOLD : $gldbal1',
+                                        style: const TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'SILVER : $slvbal2',
+                                        style: const TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  )
+                                : const CircularProgressIndicator()),
                       ],
                     ),
                     Column(
@@ -344,13 +495,39 @@ class _SwapTokensState extends State<SwapTokens> {
                         SizedBox(
                           width: 160,
                           child: CupertinoButton(
+                            minSize: 0,
+                            pressedOpacity: 1.0,
                             padding: EdgeInsets.all(10),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25.0)),
                             color: Colors.deepOrange,
-                            onPressed: () => {
-                              acc2 = mycontroller2.text,
-                              getBalance1("show_balance2", acc2, ethClient!)
+                            onPressed: () async {
+                              setState(() {
+                                isLoading2 = true;
+                              });
+                              await Future.delayed(const Duration(seconds: 2));
+                              if (mycontroller2.text.length == 0 ||
+                                  mycontroller3.text.length == 0 ||
+                                  mycontroller4.text.length == 0) {
+                                isLoading2 = false;
+                                incompleteDetails();
+                              }
+                              acc2 = mycontroller3.text;
+                              tok1 = mycontroller2.text;
+                              tok2 = mycontroller4.text;
+                              var res1 =
+                                  await getBalance(tok2, acc2, ethClient!);
+                              BigInt bigint1 = BigInt.from(
+                                  res1[0] / BigInt.from(pow(10, 18)));
+                              var res2 =
+                                  await getBalance(tok1, acc2, ethClient!);
+                              BigInt bigint2 = BigInt.from(
+                                  res2[0] / BigInt.from(pow(10, 18)));
+                              setState(() {
+                                slvbal1 = '$bigint1';
+                                gldbal2 = '$bigint2';
+                                isLoading2 = false;
+                              });
                             },
                             child: Text(
                               "Account 2 balance",
@@ -362,9 +539,30 @@ class _SwapTokensState extends State<SwapTokens> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 25,
                         ),
-                        Text('balance'),
+                        Center(
+                            child: !isLoading2
+                                ? Column(
+                                    children: [
+                                      Text(
+                                        'SILVER : $slvbal1',
+                                        style: const TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'GOLD : $gldbal2',
+                                        style: const TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  )
+                                : const CircularProgressIndicator()),
                       ],
                     )
                   ],

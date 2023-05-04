@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -63,31 +65,63 @@ class _GetCurrentPriceState extends State<GetCurrentPrice> {
       body: Center(
         child: Container(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Padding(padding: EdgeInsets.all(50)),
+            Container(
+              child: Image.asset('assets/images/bitcoin.png',
+                  fit: BoxFit.fitWidth),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
+                style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.fromLTRB(22, 11, 22, 11)),
+                    textStyle: MaterialStateProperty.all(
+                        const TextStyle(fontSize: 20))),
                 onPressed: () async {
                   var res1 = await btcPrice(ethClient!);
-                  BigInt bigint = res1[0];
+                  double bigint = res1[0] / BigInt.from(pow(10, 8));
+                  String temp = bigint.toStringAsFixed(2);
                   setState(() {
-                    btcres = '$bigint';
+                    btcres = '\$' + temp;
                   });
                 },
                 child: const Text("Bitcoin Price")),
-            const SizedBox(height: 10),
-            Text("Current Price : $btcres"),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            Text(
+              "Current Price : $btcres",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 60),
             ElevatedButton(
+                style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.fromLTRB(22, 11, 22, 11)),
+                    textStyle: MaterialStateProperty.all(
+                        const TextStyle(fontSize: 20))),
                 onPressed: () async {
                   var res1 = await ethPrice(ethClient!);
-                  BigInt bigint = res1[0];
+                  double bigint = res1[0] / BigInt.from(pow(10, 8));
+                  String temp = bigint.toStringAsFixed(2);
                   setState(() {
-                    ethres = '$bigint';
+                    ethres = '\$' + temp;
                   });
                 },
                 child: const Text("Ethereum Price")),
-            const SizedBox(height: 10),
-            Text("Current Price : $ethres"),
+            const SizedBox(height: 20),
+            Text(
+              "Current Price : $ethres",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: Image.asset('assets/images/ethereum.png',
+                  fit: BoxFit.fitWidth),
+            ),
           ],
         )),
       ),

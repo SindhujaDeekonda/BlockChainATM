@@ -45,7 +45,7 @@ contract TokenSwap{
         require(sent,"Token Transfer Failed");
     }
     function show_balance1(address _addr) external view returns (uint256){
-         return token1.balanceOf(_addr);
+        return token1.balanceOf(_addr);
     }
     function show_balance2(address _addr) external view returns (uint256){
          return token2.balanceOf(_addr);
@@ -54,8 +54,8 @@ contract TokenSwap{
 
 // token1 = 0x721e75745F8DF10c0F06a08d6776840E23Ede79A
 // owner1 = 0x6fCCe8D60d3C3A58178E69e0caDa110bEE9f6363
-// token2 = 0x7c008C13Fd8E8e1E270F191feC68E1eD1E7a781D
+// token2 = 0x12eb416c6091FA419233C6d5413860753EaA8F99
 // owner2 = 0xB6C046343dF17e4B0296c59440abc9Fcb511c2fA
-// tokenswap =  0xf886CaF5bEeDA8fDbD2a62e69C1A067540ADDAD8
+// tokenswap =  //new with balance 0x3c337e90ec0C8B877C29De88f608277a9661BCD0
 // amount1 = 10000000000000000000
 // amount2 = 20000000000000000000

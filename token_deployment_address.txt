@@ -1,5 +1,0 @@
-address To import tokens (account 1) :
-0x721e75745F8DF10c0F06a08d6776840E23Ede79A
-
-address To import tokens (account 2) :
-0x7c008C13Fd8E8e1E270F191feC68E1eD1E7a781D
