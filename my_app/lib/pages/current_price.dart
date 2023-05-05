@@ -58,7 +58,7 @@ class _GetCurrentPriceState extends State<GetCurrentPrice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Get Current Price'),
+        title: const Text('Get Current Prices'),
         backgroundColor: Colors.deepPurple,
         centerTitle: true,
       ),

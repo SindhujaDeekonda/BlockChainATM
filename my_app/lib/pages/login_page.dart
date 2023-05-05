@@ -46,8 +46,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Crypto Wallet'),
+        title: const Text('Crypto Swap'),
         backgroundColor: Colors.deepPurple,
         centerTitle: true,
       ),
@@ -55,22 +56,47 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 300.0,
-              child:
-                  Image.asset('assets/images/logo.jpg', fit: BoxFit.fitWidth),
+            AnimatedContainer(
+              height: 400.0,
+              duration: Duration(seconds: 1),
+              child: Image.asset('assets/images/app_icon3.png',
+                  fit: BoxFit.fitWidth),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () => loginUsingMetamask(context),
-                child: const Text("Connect with Metamask")),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Connect with Metamask'), // <-- Text
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Icon(
+                      // <-- Icon
+                      Icons.exit_to_app,
+                      size: 24.0,
+                    ),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 15),
+                    fixedSize: const Size(250, 50),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)))),
             const SizedBox(height: 30),
-            ElevatedButton(
+            ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SwapTokens()));
                 },
-                child: const Text("Swap Tokens")),
+                icon: Icon(Icons.swap_horiz),
+                label: const Text("Swap Tokens"),
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 16),
+                    fixedSize: const Size(250, 50),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)))),
             const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
@@ -79,7 +105,25 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(
                           builder: (context) => const GetCurrentPrice()));
                 },
-                child: const Text("Get current price"))
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Get Current Prices'), // <-- Text
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Icon(
+                      // <-- Icon
+                      Icons.price_check,
+                      size: 24.0,
+                    ),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 16),
+                    fixedSize: const Size(250, 50),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)))),
           ],
         ),
       ),

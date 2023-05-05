@@ -118,6 +118,7 @@ class _SwapTokensState extends State<SwapTokens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 180, 177, 177),
       appBar: AppBar(
         title: const Text("Swap Tokens"),
         backgroundColor: Colors.deepPurple,
@@ -132,7 +133,19 @@ class _SwapTokensState extends State<SwapTokens> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      child: const Text('Open Metamask'),
+                      style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(5, 5, 15, 5)),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/metamask_small.png',
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text('Open Metamask'),
+                        ],
+                      ),
                       onPressed: () async => {
                         await LaunchApp.openApp(
                           androidPackageName: 'io.metamask',
@@ -153,7 +166,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                         color: Colors.white,
-                        disabledColor: Colors.deepOrange,
+                        disabledColor: Color.fromARGB(255, 71, 58, 51),
                         onPressed: null,
                         child: Text(
                           "Owner 1",
@@ -190,7 +203,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                         color: Colors.white,
-                        disabledColor: Colors.deepOrange,
+                        disabledColor: Color.fromARGB(255, 71, 58, 51),
                         onPressed: null,
                         child: Text(
                           "Token 1",
@@ -227,7 +240,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                         color: Colors.white,
-                        disabledColor: Colors.deepOrange,
+                        disabledColor: Color.fromARGB(255, 71, 58, 51),
                         onPressed: null,
                         child: Text(
                           "Owner 2",
@@ -264,7 +277,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                         color: Colors.white,
-                        disabledColor: Colors.deepOrange,
+                        disabledColor: Color.fromARGB(255, 71, 58, 51),
                         onPressed: null,
                         child: Text(
                           "Token 2",
@@ -301,7 +314,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                         color: Colors.white,
-                        disabledColor: Colors.deepOrange,
+                        disabledColor: Color.fromARGB(255, 71, 58, 51),
                         onPressed: null,
                         child: Text(
                           "GOLD",
@@ -338,7 +351,7 @@ class _SwapTokensState extends State<SwapTokens> {
                         padding: EdgeInsets.all(0),
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                         color: Colors.white,
-                        disabledColor: Colors.deepOrange,
+                        disabledColor: Color.fromARGB(255, 71, 58, 51),
                         onPressed: null,
                         child: Text(
                           "SILVER",
@@ -418,9 +431,7 @@ class _SwapTokensState extends State<SwapTokens> {
                             minSize: 0,
                             pressedOpacity: 1.0,
                             padding: EdgeInsets.all(10),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)),
-                            color: Colors.deepOrange,
+                            color: Color.fromARGB(255, 115, 84, 188),
                             onPressed: () async {
                               setState(() {
                                 isLoading1 = true;
@@ -498,9 +509,7 @@ class _SwapTokensState extends State<SwapTokens> {
                             minSize: 0,
                             pressedOpacity: 1.0,
                             padding: EdgeInsets.all(10),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)),
-                            color: Colors.deepOrange,
+                            color: Color.fromARGB(255, 115, 84, 188),
                             onPressed: () async {
                               setState(() {
                                 isLoading2 = true;
