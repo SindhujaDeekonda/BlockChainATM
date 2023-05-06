@@ -4,7 +4,8 @@ String infura_url =
 String sepolia_infura_url =
     "https://sepolia.infura.io/v3/509dfef1ccd844f6ad3f3f2577e47566";
 
-String owner_private_key = " "; //ENTER YOUR PRIVATE KEY
+String owner_private_key =
+    "210cdc8f160cb89274fd57b8d6e605f8baa03ead1f7a5191dd5005996c346dfe"; //ENTER YOUR PRIVATE KEY
 
 String currentPriceAddress = "0xa629704d23831C1dc811B5d48828BEBd15745385";
 

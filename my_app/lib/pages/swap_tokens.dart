@@ -118,7 +118,6 @@ class _SwapTokensState extends State<SwapTokens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 180, 177, 177),
       appBar: AppBar(
         title: const Text("Swap Tokens"),
         backgroundColor: Colors.deepPurple,
@@ -393,6 +392,12 @@ class _SwapTokensState extends State<SwapTokens> {
                     tok1 = mycontroller2.text;
                     acc2 = mycontroller3.text;
                     tok2 = mycontroller4.text;
+                    if (acc1.length == 0 ||
+                        acc2.length == 0 ||
+                        tok1.length == 0 ||
+                        tok2.length == 0) {
+                      incompleteDetails();
+                    }
                     amount1 = BigInt.parse(mycontroller5.text) *
                         BigInt.from(pow(10, 18));
                     amount2 = BigInt.parse(mycontroller6.text) *
@@ -437,15 +442,17 @@ class _SwapTokensState extends State<SwapTokens> {
                                 isLoading1 = true;
                               });
                               await Future.delayed(const Duration(seconds: 1));
-                              if (mycontroller1.text.length == 0 ||
-                                  mycontroller2.text.length == 0 ||
-                                  mycontroller4.text.length == 0) {
-                                isLoading1 = false;
-                                incompleteDetails();
-                              }
                               acc1 = mycontroller1.text;
                               tok1 = mycontroller2.text;
                               tok2 = mycontroller4.text;
+                              if (acc1.length == 0 ||
+                                  tok1.length == 0 ||
+                                  tok2.length == 0) {
+                                setState(() {
+                                  isLoading1 = false;
+                                });
+                                incompleteDetails();
+                              }
                               //DeployedContract contract1 = await loadContract1();
                               //var _token1 = await contract1.functions.token1.call();
                               var res1 =
@@ -515,15 +522,17 @@ class _SwapTokensState extends State<SwapTokens> {
                                 isLoading2 = true;
                               });
                               await Future.delayed(const Duration(seconds: 2));
-                              if (mycontroller2.text.length == 0 ||
-                                  mycontroller3.text.length == 0 ||
-                                  mycontroller4.text.length == 0) {
-                                isLoading2 = false;
-                                incompleteDetails();
-                              }
                               acc2 = mycontroller3.text;
                               tok1 = mycontroller2.text;
                               tok2 = mycontroller4.text;
+                              if (acc2.length == 0 ||
+                                  tok1.length == 0 ||
+                                  tok2.length == 0) {
+                                setState(() {
+                                  isLoading2 = false;
+                                });
+                                incompleteDetails();
+                              }
                               var res1 =
                                   await getBalance(tok2, acc2, ethClient!);
                               BigInt bigint1 = BigInt.from(
