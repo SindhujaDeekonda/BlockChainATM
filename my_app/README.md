@@ -1,16 +1,58 @@
-# my_app
+# Blockchain ATM
 
-A new Flutter project.
+Building a Blockchain mobile application for getting real time crypto prices and exchanging cryptocurrencies.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Tech Stack
 
-A few resources to get you started if this is your first Flutter project:
+**FrontEnd:**
++ Flutter
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**Backend:**
++ Blockchain
++ Solidity
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+*Metamask wallet is used to store user tokens.*
+
+## API Reference
+
+**Infura**
+```bash
+  https://www.infura.io/
+```
+
+## Run Locally
+
+Clone the project
+
++ git clone https://link-to-project
+
+
+Install dependencies
+
++ flutter pub get
++ flutter pub cache repair (in case of dependency error)
+
+Private Key 
++ Make sure to give your own private key for transactions
+
+
+## Screenshots
+
+<img src="https://user-images.githubusercontent.com/113004872/236425585-027d5530-5217-4933-941b-f5f1384f76cd.jpeg" width="200" height="440"> <img src="https://user-images.githubusercontent.com/113004872/236521486-6eb0a73e-31ff-468a-ace6-c0abbab0e094.jpeg" width="200" height="440"> <img src="https://user-images.githubusercontent.com/113004872/236427213-f5cee95b-d15c-4c04-a9af-91205f7311de.jpeg" width="200" height="440">    <img src="https://user-images.githubusercontent.com/113004872/236427279-c6b3f7e0-1bb9-4519-9943-46cdfb456a50.jpeg" width="200" height="440"> 
+
+
+## Demo
+
+
+
+https://user-images.githubusercontent.com/113004872/236435113-393ac9f5-f4a6-484c-a30d-6621a0552937.mp4
+
+
+
+## Feedback
+
+If you have any feedback, please reach out to me at dsindhujasri.vspm@gmail.com
+
+
+
