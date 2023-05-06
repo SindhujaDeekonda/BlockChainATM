@@ -109,6 +109,14 @@ class _SwapTokensState extends State<SwapTokens> {
         fontSize: 16.0);
   }
 
+  bool isValidAddress(String ethereumAddress) {
+    RegExp regex = RegExp(r'^0x[0-9a-f]{40}$');
+    if (regex.hasMatch(ethereumAddress)) {
+      return true;
+    }
+    return false;
+  }
+
   TextEditingController mycontroller1 = TextEditingController();
   TextEditingController mycontroller2 = TextEditingController();
   TextEditingController mycontroller3 = TextEditingController();
@@ -118,7 +126,6 @@ class _SwapTokensState extends State<SwapTokens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 180, 177, 177),
       appBar: AppBar(
         title: const Text("Swap Tokens"),
         backgroundColor: Colors.deepPurple,
@@ -393,27 +400,35 @@ class _SwapTokensState extends State<SwapTokens> {
                     tok1 = mycontroller2.text;
                     acc2 = mycontroller3.text;
                     tok2 = mycontroller4.text;
-                    amount1 = BigInt.parse(mycontroller5.text) *
-                        BigInt.from(pow(10, 18));
-                    amount2 = BigInt.parse(mycontroller6.text) *
-                        BigInt.from(pow(10, 18));
-                    print(acc1);
-                    print(acc2);
-                    print(amount1);
-                    print(amount2);
-                    callFunctionfromst(
-                        'swap',
-                        [
-                          EthereumAddress.fromHex(tok1),
-                          EthereumAddress.fromHex(acc1),
-                          EthereumAddress.fromHex(tok2),
-                          EthereumAddress.fromHex(acc2),
-                          amount1,
-                          amount2
-                        ],
-                        ethClient!,
-                        owner_private_key);
-                    showSuccessMessage();
+                    if (!isValidAddress(acc1) ||
+                        !isValidAddress(acc2) ||
+                        !isValidAddress(tok1) ||
+                        !isValidAddress(tok2)) {
+                      incompleteDetails();
+                    } else {
+                      amount1 = BigInt.parse(mycontroller5.text) *
+                          BigInt.from(pow(10, 18));
+                      amount2 = BigInt.parse(mycontroller6.text) *
+                          BigInt.from(pow(10, 18));
+                      print(acc1);
+                      print(acc2);
+                      print(amount1);
+                      print(amount2);
+
+                      callFunctionfromst(
+                          'swap',
+                          [
+                            EthereumAddress.fromHex(tok1),
+                            EthereumAddress.fromHex(acc1),
+                            EthereumAddress.fromHex(tok2),
+                            EthereumAddress.fromHex(acc2),
+                            amount1,
+                            amount2
+                          ],
+                          ethClient!,
+                          owner_private_key);
+                      showSuccessMessage();
+                    }
                   },
                 ),
                 const SizedBox(
@@ -437,32 +452,35 @@ class _SwapTokensState extends State<SwapTokens> {
                                 isLoading1 = true;
                               });
                               await Future.delayed(const Duration(seconds: 1));
-                              if (mycontroller1.text.length == 0 ||
-                                  mycontroller2.text.length == 0 ||
-                                  mycontroller4.text.length == 0) {
-                                isLoading1 = false;
-                                incompleteDetails();
-                              }
                               acc1 = mycontroller1.text;
                               tok1 = mycontroller2.text;
                               tok2 = mycontroller4.text;
-                              //DeployedContract contract1 = await loadContract1();
-                              //var _token1 = await contract1.functions.token1.call();
-                              var res1 =
-                                  await getBalance(tok1, acc1, ethClient!);
-                              BigInt bigint1 = BigInt.from(
-                                  res1[0] / BigInt.from(pow(10, 18)));
-                              var res2 =
-                                  await getBalance(tok2, acc1, ethClient!);
-                              BigInt bigint2 = BigInt.from(
-                                  res2[0] / BigInt.from(pow(10, 18)));
-                              setState(() {
-                                gldbal1 = '$bigint1';
-                                slvbal2 = '$bigint2';
-                                isLoading1 = false;
-                              });
-                              print(gldbal1);
-                              print(slvbal2);
+                              if (!isValidAddress(acc1) ||
+                                  !isValidAddress(tok1) ||
+                                  !isValidAddress(tok2)) {
+                                setState(() {
+                                  isLoading1 = false;
+                                });
+                                incompleteDetails();
+                              } else {
+                                //DeployedContract contract1 = await loadContract1();
+                                //var _token1 = await contract1.functions.token1.call();
+                                var res1 =
+                                    await getBalance(tok1, acc1, ethClient!);
+                                BigInt bigint1 = BigInt.from(
+                                    res1[0] / BigInt.from(pow(10, 18)));
+                                var res2 =
+                                    await getBalance(tok2, acc1, ethClient!);
+                                BigInt bigint2 = BigInt.from(
+                                    res2[0] / BigInt.from(pow(10, 18)));
+                                setState(() {
+                                  gldbal1 = '$bigint1';
+                                  slvbal2 = '$bigint2';
+                                  isLoading1 = false;
+                                });
+                                print(gldbal1);
+                                print(slvbal2);
+                              }
                             },
                             child: const Text(
                               "Account 1 balance",
@@ -515,28 +533,32 @@ class _SwapTokensState extends State<SwapTokens> {
                                 isLoading2 = true;
                               });
                               await Future.delayed(const Duration(seconds: 2));
-                              if (mycontroller2.text.length == 0 ||
-                                  mycontroller3.text.length == 0 ||
-                                  mycontroller4.text.length == 0) {
-                                isLoading2 = false;
-                                incompleteDetails();
-                              }
+
                               acc2 = mycontroller3.text;
                               tok1 = mycontroller2.text;
                               tok2 = mycontroller4.text;
-                              var res1 =
-                                  await getBalance(tok2, acc2, ethClient!);
-                              BigInt bigint1 = BigInt.from(
-                                  res1[0] / BigInt.from(pow(10, 18)));
-                              var res2 =
-                                  await getBalance(tok1, acc2, ethClient!);
-                              BigInt bigint2 = BigInt.from(
-                                  res2[0] / BigInt.from(pow(10, 18)));
-                              setState(() {
-                                slvbal1 = '$bigint1';
-                                gldbal2 = '$bigint2';
-                                isLoading2 = false;
-                              });
+                              if (!isValidAddress(acc2) ||
+                                  !isValidAddress(tok1) ||
+                                  !isValidAddress(tok2)) {
+                                setState(() {
+                                  isLoading2 = false;
+                                });
+                                incompleteDetails();
+                              } else {
+                                var res1 =
+                                    await getBalance(tok2, acc2, ethClient!);
+                                BigInt bigint1 = BigInt.from(
+                                    res1[0] / BigInt.from(pow(10, 18)));
+                                var res2 =
+                                    await getBalance(tok1, acc2, ethClient!);
+                                BigInt bigint2 = BigInt.from(
+                                    res2[0] / BigInt.from(pow(10, 18)));
+                                setState(() {
+                                  slvbal1 = '$bigint1';
+                                  gldbal2 = '$bigint2';
+                                  isLoading2 = false;
+                                });
+                              }
                             },
                             child: Text(
                               "Account 2 balance",
