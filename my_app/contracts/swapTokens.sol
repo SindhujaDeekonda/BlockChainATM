@@ -44,12 +44,7 @@ contract TokenSwap{
         bool sent = token.transferFrom(sender,recipient,amount);
         require(sent,"Token Transfer Failed");
     }
-    function show_balance1(address _addr) external view returns (uint256){
-        return token1.balanceOf(_addr);
-    }
-    function show_balance2(address _addr) external view returns (uint256){
-         return token2.balanceOf(_addr);
-    }
+
 }
 
 // token1 = 0x721e75745F8DF10c0F06a08d6776840E23Ede79A
